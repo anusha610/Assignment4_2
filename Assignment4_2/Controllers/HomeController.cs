@@ -15,7 +15,7 @@ namespace Assignment4_2
 {
     public class HomeController : Controller
     {
-        string BASE_URL = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.name=University&_fields=id,school.name,2013.student.size&";
+        string BASE_URL = "https://api.data.gov/ed/collegescorecard/v1/schools.json?";
         HttpClient httpClient;
 
         private readonly ILogger<HomeController> _logger;
@@ -25,13 +25,17 @@ namespace Assignment4_2
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new
-                System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public UniversityData GetUniversities()
+        public IActionResult GetUniversities()
         {
-            string API_PATH = BASE_URL + "&api_key=ck1LVrQunLhfsjSgoithxWggF6ZbNSp3SvalD4d4";
-            string companyList = "";
+            string apiExtension = "school.state=Ca";
+            string apiFields = "&_fields=id,school.school_url,school.name,2018.student.size,school.zip,latest.cost.tuition.out_of_state,school.accreditor_code,";
+            string apiKey= "&api_key=ck1LVrQunLhfsjSgoithxWggF6ZbNSp3SvalD4d4";
+            string API_PATH = BASE_URL + apiExtension + apiFields + apiKey;
+            
+            string responseString = "";
             UniversityData data = null;
 
             // Connect to the IEXTrading API and retrieve information
@@ -41,30 +45,39 @@ namespace Assignment4_2
             // Read the Json objects in the API response
             if (response.IsSuccessStatusCode)
             {
-                companyList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                responseString = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                responseString =  responseString.Replace("school.name","schoolName");
+                responseString = responseString.Replace("school.school_url","schoolUrl");
+                responseString = responseString.Replace("2018.student.size", "studentSize");
+                responseString = responseString.Replace("school.zip", "schoolZip");
+                responseString = responseString.Replace("latest.cost.tuition.out_of_state","tuitionOutState");
+                responseString = responseString.Replace("school.accreditor_code", "accCode");
+                
             }
 
             // Parse the Json strings as C# objects
-            if (!companyList.Equals(""))
+            if (!responseString.Equals(""))
             {
-                data = JsonConvert.DeserializeObject<UniversityData>(companyList);
-               
+                data = System.Text.Json.JsonSerializer.Deserialize<UniversityData>(responseString);
+                //data = JsonConvert.DeserializeObject<UniversityData>(responseString);
             }
 
-            return data ;
+            return View("Explore",data) ;
         }
         public IActionResult Index()
         {
             // Get the data from the List using GetSymbols method
-            UniversityData response = GetUniversities();
-            List<University> universityList = response.universityList;
+           // UniversityData response = GetUniversities();
+            
             // Send the data to the Index view
-            return View(universityList);
+            return View();
         }
 
 
-        
-
+        public IActionResult Explore()
+        {
+            return View();
+        }
         
 
         /*public IActionResult Index()

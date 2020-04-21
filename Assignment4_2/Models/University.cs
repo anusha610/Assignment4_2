@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace Assignment4_2.Models
     public class UniversityData
     {
         public Metadata metadata { get; set; }
-        public List<University> universityList { get; set; }
+        [JsonProperty]
+        public Results[] results { get; set; }
     }
 
     public class Metadata
@@ -19,13 +21,21 @@ namespace Assignment4_2.Models
         public int per_page { get; set; }
     }
 
-    public class University
+    public class Results
     {
-        public string schoolname { get; set; }
-        public int? _2013studentsize { get; set; }
+        public int? tuitionOutState { get; set; }
+        public string schoolZip { get; set; }
+        public string schoolUrl { get; set; }
+        public string accCode { get; set; }
+        public string schoolName { get; set; }
+        public int? studentSize { get; set; }
         public int id { get; set; }
+
     }
 }
+
+
+
 
 
 
