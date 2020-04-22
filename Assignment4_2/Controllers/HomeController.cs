@@ -28,9 +28,10 @@ namespace Assignment4_2
             System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public IActionResult GetUniversities()
+        [HttpPost]
+        public IActionResult GetUniversitiesByName(string universityName)
         {
-            string apiExtension = "school.state=Ca";
+            string apiExtension = "school.name="+universityName;
             string apiFields = "&_fields=id,school.school_url,school.name,2018.student.size,school.zip,latest.cost.tuition.out_of_state,school.accreditor_code,";
             string apiKey= "&api_key=ck1LVrQunLhfsjSgoithxWggF6ZbNSp3SvalD4d4";
             string API_PATH = BASE_URL + apiExtension + apiFields + apiKey;
@@ -64,12 +65,57 @@ namespace Assignment4_2
 
             return View("Explore",data) ;
         }
-        public IActionResult Index()
+
+        [HttpPost]
+        public IActionResult GetUniversitiesByState(string state)
         {
-            // Get the data from the List using GetSymbols method
-           // UniversityData response = GetUniversities();
-            
-            // Send the data to the Index view
+            string apiExtension = "school.state="+state;
+            string apiFields = "&_fields=id,school.school_url,school.name,2018.student.size,school.zip,latest.cost.tuition.out_of_state,school.accreditor_code,";
+            string apiKey = "&api_key=ck1LVrQunLhfsjSgoithxWggF6ZbNSp3SvalD4d4";
+            string API_PATH = BASE_URL + apiExtension + apiFields + apiKey;
+
+            string responseString = "";
+            UniversityData data = null;
+
+            // Connect to the IEXTrading API and retrieve information
+            httpClient.BaseAddress = new Uri(API_PATH);
+            HttpResponseMessage response = httpClient.GetAsync(API_PATH).GetAwaiter().GetResult();
+
+            // Read the Json objects in the API response
+            if (response.IsSuccessStatusCode)
+            {
+                responseString = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                responseString = responseString.Replace("school.name", "schoolName");
+                responseString = responseString.Replace("school.school_url", "schoolUrl");
+                responseString = responseString.Replace("2018.student.size", "studentSize");
+                responseString = responseString.Replace("school.zip", "schoolZip");
+                responseString = responseString.Replace("latest.cost.tuition.out_of_state", "tuitionOutState");
+                responseString = responseString.Replace("school.accreditor_code", "accCode");
+
+            }
+
+            // Parse the Json strings as C# objects
+            if (!responseString.Equals(""))
+            {
+                data = System.Text.Json.JsonSerializer.Deserialize<UniversityData>(responseString);
+                //data = JsonConvert.DeserializeObject<UniversityData>(responseString);
+            }
+
+            return View("Explore", data);
+        }
+
+        public IActionResult LogIn()
+        {
+            return View();
+        }
+
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
+
+        public IActionResult Index()
+        {                   
             return View();
         }
 
@@ -79,16 +125,6 @@ namespace Assignment4_2
             return View();
         }
         
-
-        /*public IActionResult Index()
-        {
-            return View();
-        }*/
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
