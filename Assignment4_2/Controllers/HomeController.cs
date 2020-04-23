@@ -114,6 +114,17 @@ namespace Assignment4_2
         {
             return View();
         }
+       
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SignUp(Login login)
+        {
+            return View("LogIn");
+        }
 
         public IActionResult AboutUs()
         {
