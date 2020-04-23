@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Assignment4_2.Models
 {
-    public class State
+    public class Login
     {
         [Key]
-        public string id { get; set; }
-        public string code { get; set; }
-        public string name { get; set; }
+        public string email { get; set; }
+        public string password { get; set; }
         
     }
 }

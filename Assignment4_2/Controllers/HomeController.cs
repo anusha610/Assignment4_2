@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Http;
 using Assignment4_2;
-using Assignment4_2.DataAccess;
+
 using Assignment4_2.Models;
 
 namespace Assignment4_2
@@ -102,6 +102,12 @@ namespace Assignment4_2
             }
 
             return View("Explore", data);
+        }
+
+        [HttpPost]
+        public IActionResult Login(Login login)
+        {
+            return View();
         }
 
         public IActionResult LogIn()

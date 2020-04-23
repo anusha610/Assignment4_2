@@ -2358,7 +2358,7 @@ textarea.form-control {
   }
   .form-inline .form-check-input {
     position: relative;
-    -ms-flex-negative: 0;
+    
     flex-shrink: 0;
     margin-top: 0;
     margin-right: 0.25rem;
