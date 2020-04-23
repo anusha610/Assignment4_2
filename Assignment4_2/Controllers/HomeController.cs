@@ -119,6 +119,11 @@ namespace Assignment4_2
         {
             return View();
         }
+        public IActionResult ApplyForm()
+        {
+            return View();
+        }
+
 
         public IActionResult Index()
         {                   
