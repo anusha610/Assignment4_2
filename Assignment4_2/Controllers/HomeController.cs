@@ -105,7 +105,7 @@ namespace Assignment4_2
         }
 
         [HttpPost]
-        public IActionResult Login(Login login)
+        public IActionResult Login(LogIn logIn)
         {
             return View();
         }
@@ -120,8 +120,9 @@ namespace Assignment4_2
             return View();
         }
 
+
         [HttpPost]
-        public IActionResult SignUp(Login login)
+        public IActionResult SignUp(LogIn logIn)
         {
             return View("LogIn");
         }
